@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quicknsol_assignment/controller/login_controller.dart';
+import 'package:quicknsol_assignment/utils/routes/route_names.dart';
 import 'package:quicknsol_assignment/utils/widgets/custom_button.dart';
 import 'package:quicknsol_assignment/view/signUp/signUp_screen.dart';
 
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
         const Text("Dont have an account? "),
         TextButton(
             onPressed: () {
-              Get.to(SignupScreen());
+              Get.offNamed(RouteName.signUpView);
             },
             child: const Text(
               "Sign Up",

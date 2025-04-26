@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quicknsol_assignment/utils/config/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final String title;
@@ -21,7 +22,7 @@ class CustomButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.deepPurpleAccent,
+            backgroundColor: lightPrimaryColor,
           ),
         ));
   }

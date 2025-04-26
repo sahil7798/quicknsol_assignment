@@ -35,6 +35,7 @@ class NetworkApiService implements BaseApiServices {
   Future getPostApiResponse(String url, dynamic data) async {
     if (kDebugMode) {
       print(url);
+      print(data);
     }
 
     dynamic responseJson;

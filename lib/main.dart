@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quicknsol_assignment/utils/routes/routes.dart';
+import 'package:quicknsol_assignment/utils/config/theme.dart';
 import 'package:quicknsol_assignment/view/home/home_screen.dart';
 import 'package:quicknsol_assignment/view/login/login_screen.dart';
 import 'package:quicknsol_assignment/view/signUp/signUp_screen.dart';
@@ -18,14 +20,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: GetMaterialApp(
+          theme: lightTheme,
+          themeMode: ThemeMode.light,
           debugShowCheckedModeBanner: false,
           title: 'Quicknsol Assignment',
-          theme: ThemeData(
-            colorScheme:
-                ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
-            useMaterial3: true,
+
+          // theme: ThemeData(
+          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
+          //   useMaterial3: true,
+          // ),
+          getPages: AppRoutes.appRoutes()
+          // home: SignupScreen(),
           ),
-          home: const SplashScreen()),
     );
   }
 }

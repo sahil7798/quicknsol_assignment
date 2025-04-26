@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quicknsol_assignment/data/network/base_api_servces.dart';
 import 'package:quicknsol_assignment/data/network/network_api_services.dart';
+import 'package:quicknsol_assignment/utils/routes/route_names.dart';
 import 'package:quicknsol_assignment/utils/utils.dart';
 import 'package:quicknsol_assignment/view/home/home_screen.dart';
 import 'package:quicknsol_assignment/view/login/login_screen.dart';
@@ -35,7 +36,7 @@ class SignupController extends GetxController {
         passwordController.clear();
         await Future.delayed(Duration(seconds: 3));
 
-        Get.off(HomeScreen());
+        Get.offNamed(RouteName.loginView);
       } else {
         print(response);
       }

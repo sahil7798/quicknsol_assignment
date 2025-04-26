@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quicknsol_assignment/controller/signUp_controller.dart';
+import 'package:quicknsol_assignment/utils/routes/route_names.dart';
 import 'package:quicknsol_assignment/utils/widgets/custom_button.dart';
 import 'package:quicknsol_assignment/utils/widgets/custom_textfield.dart';
 import 'package:quicknsol_assignment/view/login/login_screen.dart';
@@ -96,7 +97,9 @@ class SignupScreen extends StatelessWidget {
                     const Text("Already have an account?"),
                     TextButton(
                         onPressed: () {
-                          Get.off(LoginScreen());
+                          Get.offNamed(
+                            RouteName.loginView,
+                          );
                         },
                         child: const Text(
                           "Login",

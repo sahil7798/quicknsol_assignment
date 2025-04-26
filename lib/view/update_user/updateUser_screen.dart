@@ -34,11 +34,14 @@ class _UpdateuserScreenState extends State<UpdateuserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //  updateController.emailController.text = widget.email;
     print(widget.email);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+            ),
+            onPressed: () => Get.back()),
         title: Text(
           "Update User",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

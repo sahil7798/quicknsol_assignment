@@ -49,7 +49,7 @@ class UsersController extends GetxController {
       if (response == true) {
         Utils.toastMessage('User Deleted Success');
         fetchUsers();
-        fetchUsers();
+        Get.back();
         update();
       }
 
@@ -75,8 +75,8 @@ class UsersController extends GetxController {
       if (response['id'] != null) {
         Utils.toastMessage("Updated Succesfully!");
 
-        await Future.delayed(Duration(seconds: 2));
-        Get.off(HomeScreen());
+        fetchUsers();
+        Get.back();
       }
 
       update();
@@ -86,5 +86,10 @@ class UsersController extends GetxController {
       _isLoading = false.obs;
       update();
     }
+  }
+
+  Future refreshScreen() async {
+    users.clear();
+    fetchUsers();
   }
 }
