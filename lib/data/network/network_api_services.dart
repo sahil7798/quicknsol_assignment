@@ -1,134 +1,74 @@
-import 'dart:async';
+// lib/data/network/network_api_services.dart
 import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:quicknsol_assignment/data/app_exceptions.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:quicknsol_assignment/data/network/base_api_servces.dart';
 
 class NetworkApiService implements BaseApiServices {
-  @override
-  Future getGetApiResponse(String url) async {
-    if (kDebugMode) {
-      print(url);
-    }
-    dynamic responseJson;
-    try {
-      final response =
-          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 20));
-      responseJson = returnResponse(response);
-      print(response.statusCode);
-    } on SocketException {
-      throw NoInternetException('');
-    } on TimeoutException {
-      throw FetchDataException('Network Request time out');
-    }
+  final _client = http.Client();
 
-    if (kDebugMode) {
-      print(responseJson);
-    }
-    return responseJson;
+  // -----------------------------------------------------------------
+  // Public helper – used by UsersController
+  // -----------------------------------------------------------------
+  Future<bool> isOnline() async {
+    final result = await Connectivity().checkConnectivity();
+    return result != ConnectivityResult.none;
   }
 
+  // -----------------------------------------------------------------
+  // GET
+  // -----------------------------------------------------------------
   @override
-  Future getPostApiResponse(String url, dynamic data) async {
-    if (kDebugMode) {
-      print(url);
-      print(data);
-    }
-
-    dynamic responseJson;
-    try {
-      Response response = await http
-          .post(Uri.parse(url), body: data)
-          .timeout(const Duration(seconds: 10));
-
-      responseJson = returnResponse(response);
-    } on SocketException {
-      throw NoInternetException('');
-    } on TimeoutException {
-      throw FetchDataException('Network Request time out');
-    }
-
-    if (kDebugMode) {
-      print(responseJson);
-    }
-    return responseJson;
+  Future<dynamic> getGetApiResponse(String url) async {
+    final response = await _client.get(Uri.parse(url));
+    return _handleResponse(response);
   }
 
+  // -----------------------------------------------------------------
+  // POST (you already have the method in the abstract class)
+  // -----------------------------------------------------------------
   @override
-  Future getDeleteApiResponse(String url, data) async {
-    if (kDebugMode) {
-      print(url);
-    }
-    dynamic responseJson;
-    try {
-      final response = await http
-          .delete(Uri.parse(url))
-          .timeout(const Duration(seconds: 20));
-      responseJson = returnResponse(response);
-    } on SocketException {
-      throw NoInternetException('');
-    } on TimeoutException {
-      throw FetchDataException('Network Request time out');
-    }
-
-    if (kDebugMode) {
-      print(responseJson);
-    }
-    return responseJson;
+  Future<dynamic> getPostApiResponse(String url, dynamic data) async {
+    final response = await _client.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(data),
+    );
+    return _handleResponse(response);
   }
 
+  // -----------------------------------------------------------------
+  // PUT (update)
+  // -----------------------------------------------------------------
   @override
-  Future getUpdateApiResponse(String url, data) async {
-    if (kDebugMode) {
-      print(url);
-      print(data);
-    }
-
-    dynamic responseJson;
-    try {
-      Response response = await put(Uri.parse(url), body: data)
-          .timeout(const Duration(seconds: 10));
-
-      responseJson = returnResponse(response);
-    } on SocketException {
-      throw NoInternetException('');
-    } on TimeoutException {
-      throw FetchDataException('Network Request time out');
-    }
-
-    if (kDebugMode) {
-      print(responseJson);
-    }
-    return responseJson;
+  Future<dynamic> getUpdateApiResponse(String url, dynamic data) async {
+    final response = await _client.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(data),
+    );
+    return _handleResponse(response);
   }
 
-  dynamic returnResponse(http.Response response) {
-    if (kDebugMode) {
-      print(response.statusCode);
-    }
+  // -----------------------------------------------------------------
+  // DELETE
+  // -----------------------------------------------------------------
+  @override
+  Future<dynamic> getDeleteApiResponse(String url, dynamic data) async {
+    final response = await _client.delete(Uri.parse(url));
+    return _handleResponse(response);
+  }
 
-    switch (response.statusCode) {
-      case 201:
-        dynamic responseJson = jsonDecode(response.body.toString());
-        return responseJson;
-      case 200:
-        dynamic responseJson = jsonDecode(response.body.toString());
-        return responseJson;
-      case 401:
-        dynamic responseJson = jsonDecode(response.body.toString());
-        throw BadRequestException("${responseJson['message']} ");
-      case 400:
-        dynamic responseJson = jsonDecode(response.body.toString());
-        throw BadRequestException("${responseJson['message'][0]} ");
-      case 500:
-      case 404:
-        throw UnauthorisedException(response.body.toString());
-      default:
-        throw FetchDataException(
-            'Error occured while communicating with server');
+  // -----------------------------------------------------------------
+  // Centralised response handling
+  // -----------------------------------------------------------------
+  dynamic _handleResponse(http.Response resp) {
+    if (resp.statusCode >= 200 && resp.statusCode < 300) {
+      // DELETE returns true, empty body → return true
+      // GET/POST/PUT return JSON
+      return resp.body.isEmpty ? true : jsonDecode(resp.body);
+    } else {
+      throw Exception('HTTP ${resp.statusCode}: ${resp.body}');
     }
   }
 }

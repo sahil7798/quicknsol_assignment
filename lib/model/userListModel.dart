@@ -1,7 +1,4 @@
-// To parse this JSON data, do
-//
-//     final userListModel = userListModelFromJson(jsonString);
-
+// lib/model/userListModel.dart
 import 'dart:convert';
 
 List<UserListModel> userListModelFromJson(String str) =>
@@ -32,6 +29,34 @@ class UserListModel {
     required this.updatedAt,
   });
 
+  // --------------------------------------------------------------
+  //  ADD THIS METHOD ONLY
+  // --------------------------------------------------------------
+  UserListModel copyWith({
+    int? id,
+    String? email,
+    String? password,
+    String? name,
+    Role? role,
+    String? avatar,
+    DateTime? creationAt,
+    DateTime? updatedAt,
+  }) {
+    return UserListModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      name: name ?? this.name,
+      role: role ?? this.role,
+      avatar: avatar ?? this.avatar,
+      creationAt: creationAt ?? this.creationAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  // --------------------------------------------------------------
+  //  YOUR ORIGINAL CODE (unchanged)
+  // --------------------------------------------------------------
   factory UserListModel.fromJson(Map<String, dynamic> json) => UserListModel(
         id: json["id"],
         email: json["email"],
